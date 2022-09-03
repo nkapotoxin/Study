@@ -24,7 +24,18 @@
 
 启动openvpn客户端即可访问
 
-# 3 备注
+# 3 电脑开启wiki共享vpn连接
+
+## 3.1 开启热点
+
+开始 -> 网络和互联网 -> 移动热点 -> 开启
+
+## 3.2 vpn开启共享
+
+vpn属性 -> 共享页面 -> Internet Connection Sharing -> Allow other... -> wiki热点
+
+
+# 4 备注
 
 ## 3.1 server端要开启端口安全组配置
 
