@@ -71,3 +71,15 @@
     find source_dir/ -type f -name "*.cpp" -print0 |xargs -0 wc -l
     find ./ -type f -name "*.md" -print |  xargs wc -l
 
+    推荐做法: find和xargs一起用时, 建议使用-print0 和 -0分别确定两个命令的定界符为字符null来分隔输出,
+    避免find命令输出结果的定界符究竟是'\n'还是' ', 因为有些文件名中可能包含空格符, xargs可能会误认为他们是定界符
+
+### subshell hack
+
+xargs只能以几种有限的方式来提供参数, 除此之外, 更灵活的方式是通过子shell的妙招.
+比如一个包含while循环的子shell可以用来读取参数, 并通过一种巧妙地方式执行命令:
+
+    cat files.txt | ( while read arg; do cat $arg; done )
+    # eq. cat files.txt | xargs -I {} cat {}
+
+
