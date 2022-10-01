@@ -37,3 +37,8 @@
 
 	git push <remote> <tag_name>
 
+## 1.6 回退代码到某个commitid
+
+    git reset --hard commitid
+
+
