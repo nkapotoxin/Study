@@ -148,7 +148,7 @@ jump  指定下一条语句的运行点。可以是文件的行号，可以是fi
 
  
 
-##7.信号命令
+## 7.信号命令
 signal 　　signal SIGXXX 　　产生XXX信号，如SIGINT。一种速查Linux查询信号的方法：# kill -l
 
 handle 　　在GDB中定义一个信号处理。信号可以以SIG开头或不以SIG开头，可以用定义一个要处理信号的范围（如：SIGIO-SIGKILL，表示处理从SIGIO信号到SIGKILL的信号，其中包括SIGIO，SIGIOT，SIGKILL三个信号），也可以使用关键字all来标明要处理所有的信号。一旦被调试的程序接收到信号，运行程序马上会被GDB停住，以供调试。其可以是以下几种关键字的一个或多个：
