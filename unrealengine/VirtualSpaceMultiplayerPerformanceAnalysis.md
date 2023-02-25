@@ -72,7 +72,7 @@ VirutalSpace场景下, 除了常规的Actor需要同步外, 参展的人(Charact
 
 ### ServerReplicateActors
 
-Net Brocast Tick中最主要的任务是执行ServerReplicateActors, 执行Actor到client connection的Replication.  
+Net Broadcast Tick中最主要的任务是执行ServerReplicateActors, 执行Actor到client connection的Replication.  
 
 ![](NetBroadcast-2-ServerReplicateActors.PNG)
 
@@ -81,13 +81,58 @@ Net Brocast Tick中最主要的任务是执行ServerReplicateActors, 执行Actor
 ![](NetBroadcast-3-ReplicateActor.PNG)
 
 
-# VirtualSpace Thousand Players Test Result Analysis
+# VirtualSpace Thousand Players Test Result
+
+注: 当Actor数量非常多时, 开启Profile功能会严重消耗DS的CPU资源, 导致帧率严重下降, 获得的GameThread Profile耗时数据严重偏大, 虽然无法精确获得实际耗时, 但可以帮助我们分析系统目前哪一部分耗时相对更长, 是系统的瓶颈点/可优化点.  
+
+	1. DS最主要的CPU资源消耗在执行GameEngine Tick上, 其中Net Broadcast Tick和Actor/Actor Component Tick是最主要的耗时任务, 占总耗时的95+%.
+
+	2. Actor/Actor Component Tick的耗时与Character和关联的Component的数量相关.
+
+	3. 每个Character/Component Tick耗时主要在CharMoveComp、Character、MeshComponent以及SpringArmComponent的tick上, 主要是PhysWalking的SceneQuery、开发者自定义的蓝图执行、蒙太奇动画更新、Camera的Transform, 在当前测试场景下这几个组件的Tick耗时比为4:2:1:1.
+
+	4. Net Broadcast的CPU耗时与客户端数量以及服务端上的Channels数量相关.
+
+	5. Net Broadcast Tick耗时主要在ReplicateActor上, 主要是每个客户端链接中的每个ActorChannel上执行排序、计算相关性、Replicate、序列化等.
+
+	6. 随客户端的增加, Net Broadcast Tick与Actor/ActorComponent Tick耗时比例逐步增加(1Client/1K Character下是1:4, 30Client/1K Character下是5:2).
+
+# Developer Optimize Advise
+
+	1. 服务器上关闭不必要的Component Tick.
+
+	2. 服务器上开启动画更新优化开关(OnlyTickMontagesWhenNotRendered), 仅同步蒙太奇.
+
+	3. 优化FindFloor实现, 减少GeomSweep耗时.
+
+	4. 玩家Tick/Event实现改为C++实现(蓝图->C++).
+	
+
+# Performance Further Improvement
+
+## 1. World Partition(TODO)
+
+大世界场景下, 为了提升性能, 可以将世界分区(Spatial Partition), Actor按需加载. 在VirtualSpace场景下UE5里面的WorldPartition技术不是很适用, 可以考虑类似AWS SimSpace的做法, 通过分布式的DS实现世界分区, 每个DS按需处理所属分区的应用逻辑, 从而提升整体性能.  
+
+## 2. Distribute Client Connections
+
+通过Distrubuted DS实现Client Connections的Distribution, 将Net Boradcast分布式到多个DS, 减少单个DS需要处理的ActorChannel数量, 从而提升整体性能.  
+
+### 2.1 DS Distribute
+
+AussSDK和AussService针对3D应用程序提供高性能的数据复制、状态同步、Spatial Partitioning等功能, 开发者基于这些能力可以实现Pawn Synchronization、Actor Replication、RPC等Multiplayer功能, 帮助开发者实现DS Distribute.  
 
 
+### 2.2 VirtualSpace Performance Optimization
 
+基于DS Distribute的方案, 除了上一章节列出的优化建议外, 进一步的优化建议如下:  
 
+	1. 优化NetBroadcast耗时, 去除远端玩家不需要的Component, 或者关闭该Component在服务端的Tick, 比如SpringArmComponent等.
 
+	2. 优化NetBroadcast耗时, 关闭远端玩家的移动同步, 直接通过RPC同步输入给客户端, 客户端模拟移动, 减少服务端的遍历属性耗时.
 
+	3. 使用ReplicationGraph功能, 设置好远端玩家和本地玩家的同步分组和地图分区, 优化服务端计算相关性耗时.
 
+	4. 合理设定玩家的网络剔除距离, 必要时优化相关性函数实现, 提升游戏体验. 
 
 
