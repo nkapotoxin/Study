@@ -6,45 +6,9 @@ DS性能(No Render/RHI Thread, Just GameThread)主要受Cpu和Net等相关的性
 
 ![](GameThread-1.PNG)
 
-	GameThread 
-	-- GameEngine Tick 
-	   -- World Tick
-	   -- TickableGameObjects Tick
-	   -- TickAsyncLoading GT
-	   -- Update Level Streaming
-	   -- Conditional Commit Map Change
-	   -- Tick World Travel
-	   -- Get World Context From Handle Checked
-	   -- Render Target Pool Transition Wait
-	   -- ...
-	-- Deferred Tick 
-	-- Frame Sync 
-	-- RHI Game Tick 
-	-- FEngineLoop Update Time And Handle Max Tick Rate
-	-- FEngineLoop Wait For Movie To Finish
-	-- FEngineLoop Tick AutomationWorker
-	-- FEngineLoop Flush ThreadLogs
-	-- FEngineLoop Idle 
-	-- DelaySceneRenderCompletion TaskWait
-	-- Delete Resources 
-	-- ...
-
 其中World Tick的主要CPU耗时在Actor的Tick、Net Broadcast Tick、Net Tick等的Tick上，如下所示：  
 
 ![](GameThread-2-Tick.PNG)
-
-	World Tick
-	-- Actor Tick
-	-- Net Broadcast Tick
-	-- GT Tickable Tick
-	-- Net Tick
-	-- Queue Ticks
-	-- Update Camera
-	-- Nav Tick
-	-- Sequence Tick
-	-- GC Sweep
-	-- Reset Async Trace
-	-- ...
 
 一般影响DS CPU性能的主要是DS上的AI、移动同步、网络同步、动画、物理等功能的运行, 对应到World Tick中的Tick、NetBroadcast Tick、Net Tick上, 不同的应用程序影响可能不一样, 要具体应用具体分析.  
 
