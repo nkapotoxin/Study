@@ -4,6 +4,8 @@
 
 DS性能(No Render/RHI Thread, Just GameThread)主要受Cpu和Net等相关的性能因素影响, 其中CPU部分(GameThread)的主要性能影响在GameEngine的World Tick上, 如下所示:  
 
+![](GameThread-1.PNG)
+
 	GameThread 
 	-- GameEngine Tick 
 	   -- World Tick
@@ -29,6 +31,8 @@ DS性能(No Render/RHI Thread, Just GameThread)主要受Cpu和Net等相关的性
 
 其中World Tick的主要CPU耗时在Actor的Tick、Net Broadcast Tick、Net Tick等的Tick上，如下所示：  
 
+![](GameThread-2-Tick.PNG)
+
 	World Tick
 	-- Actor Tick
 	-- Net Broadcast Tick
@@ -49,14 +53,16 @@ DS性能(No Render/RHI Thread, Just GameThread)主要受Cpu和Net等相关的性
 在VirtualSpace的应用场景中, 大量的玩家/参展人员同时进入展会, 观看展会内容，沉浸式互动交流等. 大型的虚拟展会一般会有上百上千的玩家存在, 同一个展会房间的玩家通常会被分配到同一个DS上, 大量的Character同步会严重消耗DS的CPU时间, 延长World Tick的执行时间, 降低服务端的运行帧率. 进一步影响玩家的参展体验.  
 
 World Tick在该场景下的分布如下图所示:  
-![](GameThread-1.PNG)
 
-下面分任务具体分析性能.
+![](GameThread-3-ActorTick.PNG)
 
+下面分任务具体分析性能.  
 
 ### Actor/Component Tick
 
 UE4 GameThread提供了TaskGraph和ThreadPool等方式来管理异步任务, Actor/Component的Tick主要是由TaskGroup来管理, 针对Tick任务, UE4提供了8个TickGroup(TG_PrePhysics/TG_StartPhysics/TG_DuringPhysics/TG_PostPhysics/TG_PostUpdateWork/TG_LastDemotable/TG_NewlySpawned), 各个TickGroup串行执行(同步/异步), 保证有序执行.  
+
+![](GameThread-4-TaskGroup.PNG)
 
 开发者注册Actor Tick或者Component Tick任务时, 可以设置Tick的周期、指定TickFunction所在哪个TickGroup启动, 必须在哪个TickGroup执行完成.  
 
