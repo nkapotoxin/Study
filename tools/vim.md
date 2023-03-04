@@ -23,3 +23,19 @@
 
     set tabstop=4
 
+### 设置分屏
+
+	水平分屏
+	ctrl+w v
+
+	上下分屏
+	ctrl+w s
+
+	切换屏幕
+	ctrl+w w
+
+	打开一个文件并上下分屏
+	:sp <newfile>
+
+	打开一个文件并水平分屏
+	:vsp <newfile>
