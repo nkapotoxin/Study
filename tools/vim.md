@@ -39,3 +39,22 @@
 
 	打开一个文件并水平分屏
 	:vsp <newfile>
+
+### 执行shell命令
+
+	不退出vim执行shell命令
+	:!<command>
+	:!bash
+
+	插入shell命令结果到当前行
+	:r !<command>
+
+	将m~n行的内容给shell命令处理
+	:m,n!<command>
+	
+	将当前行的小写转换为大写
+	:.!tr [a-z] [A-Z]
+
+	看一下将m~n行的内容给shell命令处理后的效果
+	:m,n w!<command>
+	
