@@ -35,4 +35,6 @@
     </body>
     </html>
 
-
+#### 1.4 Test command
+    docker run alpine/curl sh -c "while true; do curl -s http://192.168.0.146:9300/get?key=m1; echo&sleep 1; done"
+    docker run alpine/curl sh -c "for i in 1 2 3 4 5 6; do curl -s http://192.168.0.146:9300/get?key=m1; sleep 1; done"
