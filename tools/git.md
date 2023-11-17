@@ -41,4 +41,6 @@
 
     git reset --hard commitid
 
+## 1.7 rebase合入记录
+
 
