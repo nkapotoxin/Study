@@ -38,3 +38,26 @@
 #### 1.4 Test command
     docker run alpine/curl sh -c "while true; do curl -s http://192.168.0.146:9300/get?key=m1; echo&sleep 1; done"
     docker run alpine/curl sh -c "for i in 1 2 3 4 5 6; do curl -s http://192.168.0.146:9300/get?key=m1; sleep 1; done"
+
+#### 1.5 Docker buildx
+    ```
+    # 启用docker buildx
+    DOCKER_BUILDKIT=1 docker build --platform=local -o . "https://github.com/docker/buildx.git"
+    mkdir -p ~/.docker/cli-plugins
+    mv buildx ~/.docker/cli-plugins/docker-buildx
+    ```
+
+    ```
+    # 新建builder实例
+    docker run --rm --privileged tonistiigi/binfmt:latest --install all
+    docker buildx create --use --name=mybuilder --driver docker-container --driver-opt image=dockerpracticesig/buildkit:master
+    docker buildx use mybuilder
+    ```
+
+    ```
+    # 启动构建
+    docker buildx build --platform linux/arm,linux/arm64,linux/amd64 -t nkapotoxin/dds:3.0 . --push
+    ```
+
+
+
