@@ -14,8 +14,8 @@
 
 4. 如何使用Function Call
 
-	1. 确定要调用的Function
-	2. 定义GPT能够识别的函数定义
+4.1) 确定要调用的Function
+4.2) 定义GPT能够识别的函数定义
 ```
 {
     "name": "get_delivery_date",
@@ -33,7 +33,7 @@
     }
 }
 ```
-	3. 调用GPT接口时, 作为tools参数传给openai
+4.3) 调用GPT接口时, 作为tools参数传给openai
 ```
 tools = [
     {
@@ -68,7 +68,7 @@ response = openai.chat.completions.create(
 )
 ```
 
-	4. 基于GPT的返回确定Function名字和入参
+4.4) 基于GPT的返回确定Function名字和入参
 ```
 tools = [
     {
@@ -122,7 +122,7 @@ Choice(
 )
 ```
 
-	5. 调用函数
+4.5) 调用函数
 ```
 # Extract the arguments for get_delivery_date
 # Note this code assumes we have already determined that the model generated a function call. See below for a more production ready example that shows how to check if the model generated a function call
@@ -135,7 +135,7 @@ order_id = arguments.get('order_id')
 delivery_date = get_delivery_date(order_id)
 ```
 	
-	6. 拿到本地函数返回,再次调用GPT接口, 获取chat风格的输出给最终用户
+4.6) 拿到本地函数返回,再次调用GPT接口, 获取chat风格的输出给最终用户
 ```
 # Simulate the order_id and delivery_date
 order_id = "order_12345"
