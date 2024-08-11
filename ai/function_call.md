@@ -1,5 +1,11 @@
 # All You Need to Know in Function Call
 
+Import doc:
+- Function Calling doc: https://platform.openai.com/docs/guides/function-calling
+- Fine tuning for function calling: https://cookbook.openai.com/examples/fine_tuning_for_function_calling
+- How to call functions with chat models: https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models
+- Getting Started with OpenAI Evals: https://cookbook.openai.com/examples/evaluation/getting_started_with_openai_evals
+
 ###  1 Function Call allows user to connect models to external tools and systems
 
 ###  2 Use cases are fetch data/take actions/perform computation
